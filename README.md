@@ -1,8 +1,9 @@
 # N-Queens-Problem
 A classic artificial intelligence and constraint satisfaction problem.
 
-Team Name: 
+Team members Name: 
 Sara Alsadoon
 Nahed Almutairi
-bsma aljumah
+bsma Aljumah
 Layan Alqabbani
+Arwa Bilobeid 
