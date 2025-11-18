@@ -1,0 +1,57 @@
+static long constraintChecks = 0;
+
+public static boolean Backtracking(int[] board) {
+    return backtrackHelper(board, 0);
+}
+
+private static boolean backtrackHelper(int[] board, int col) {
+    int n = board.length;
+
+
+    if (col == n) {
+        System.out.println("Count before return (solved) = " + constraintChecks);
+        return true;
+    }
+
+
+    if (board[col] >= 0) {
+        if (!isSafeInside(board, col, board[col])) {
+            System.out.println("Count before return (forced pos unsafe) = " + constraintChecks);
+            return false;
+        }
+        boolean r = backtrackHelper(board, col + 1);
+        System.out.println("Count before return = " + constraintChecks);
+        return r;
+    }
+
+   
+    for (int row = 0; row < n; row++) {
+
+        if (isSafeInside(board, col, row)) {
+            board[col] = row;
+
+            if (backtrackHelper(board, col + 1)) {
+                System.out.println("Count before return = " + constraintChecks);
+                return true;
+            }
+
+            board[col] = -1;
+        }
+    }
+
+    System.out.println("Count before return (dead end) = " + constraintChecks);
+    return false;
+}
+
+private static boolean isSafeInside(int[] board, int col, int row) {
+    for (int c = 0; c < col; c++) {
+        if (board[c] == -1) continue;
+
+        constraintChecks++;
+        if (board[c] == row) return false;
+
+        constraintChecks++;
+        if (Math.abs(board[c] - row) == Math.abs(c - col)) return false;
+    }
+    return true;
+}
