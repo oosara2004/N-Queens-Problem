@@ -1,10 +1,10 @@
 import java.util.*;
 
-public class NQueens {
+public class NQueensTest {
+    public static void main(String[] args) {
+        testAlgorithms();
+    }
 
-public static void main(String[] args) {
-    testAlgorithms();
-}
     public static void testAlgorithms() {
         int[] nValues = { 4, 8, 16, 32, 64 };
 
@@ -18,11 +18,11 @@ public static void main(String[] args) {
 
     public static void TestBacktracking(int n) {
         int board[] = generateRandomStartState(n);
+        System.out.println("========== Backtracking ==========");
+
         long start = System.nanoTime();
         // boolean solved = Backtracking(board,n(Queens));
         long end = System.nanoTime();
-
-        System.out.println("========== Backtracking ==========");
         System.out.println("Start State = " + Arrays.toString(board));
         System.out.println("Solved = " + solved);
         System.out.println("Time = " + (end - start) / 1_000_000.0 + " ms\n");
@@ -30,11 +30,11 @@ public static void main(String[] args) {
 
     public static void TestForwardChecking(int n) {
         int board[] = generateRandomStartState(n);
+        System.out.println("========== Forward Checking ==========");
+
         long start = System.nanoTime();
         // boolean solved = ForwardChecking(board);
         long end = System.nanoTime();
-
-        System.out.println("========== Forward Checking ==========");
         System.out.println("Start State = " + Arrays.toString(board));
         System.out.println("Solved = " + solved);
         System.out.println("Time = " + (end - start) / 1_000_000.0 + " ms\n");
@@ -42,11 +42,12 @@ public static void main(String[] args) {
 
     public static void TestMAC(int n) {
         int board[] = generateRandomStartState(n);
+        System.out.println("========== MAC Checking ==========");
+
         long start = System.nanoTime();
         // boolean solved = MAC(board);
         long end = System.nanoTime();
 
-        System.out.println("========== Hill Climbing ==========");
         System.out.println("Start State = " + Arrays.toString(board)); // هنا نطبع شكل الستارت ستيت
         System.out.println("Solved = " + solved);
         System.out.println("Time = " + (end - start) / 1_000_000.0 + " ms\n");
