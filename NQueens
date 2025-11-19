@@ -1,4 +1,9 @@
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class NQueensTest {
     public static void main(String[] args) {
@@ -11,8 +16,8 @@ public class NQueensTest {
         for (int n : nValues) {
             System.out.println("========== Testing N = " + n + " ==========");
             TestBacktracking(n);
-            TestForwardChecking(n);
-            TestMAC(n);
+            // TestForwardChecking(n);
+            // TestMAC(n);
         }
     }
 
@@ -20,38 +25,57 @@ public class NQueensTest {
         int board[] = generateRandomStartState(n);
         System.out.println("========== Backtracking ==========");
 
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        Future<Boolean> future = executor.submit(() -> Backtracking(board));
+
         long start = System.nanoTime();
-        // boolean solved = Backtracking(board,n(Queens));
+        boolean solved = false;
+
+        try {
+            // Timeout = 20 minutes
+            solved = future.get(20, TimeUnit.MINUTES);
+        } catch (TimeoutException e) {
+            System.out.println("Time limit exceeded! Stopping Backtracking.");
+            future.cancel(true); // stop the task
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         long end = System.nanoTime();
+        executor.shutdownNow();
+
         System.out.println("Start State = " + Arrays.toString(board));
         System.out.println("Solved = " + solved);
         System.out.println("Time = " + (end - start) / 1_000_000.0 + " ms\n");
     }
 
-    public static void TestForwardChecking(int n) {
-        int board[] = generateRandomStartState(n);
-        System.out.println("========== Forward Checking ==========");
-
-        long start = System.nanoTime();
-        // boolean solved = ForwardChecking(board);
-        long end = System.nanoTime();
-        System.out.println("Start State = " + Arrays.toString(board));
-        System.out.println("Solved = " + solved);
-        System.out.println("Time = " + (end - start) / 1_000_000.0 + " ms\n");
-    }
-
-    public static void TestMAC(int n) {
-        int board[] = generateRandomStartState(n);
-        System.out.println("========== MAC Checking ==========");
-
-        long start = System.nanoTime();
-        // boolean solved = MAC(board);
-        long end = System.nanoTime();
-
-        System.out.println("Start State = " + Arrays.toString(board)); // هنا نطبع شكل الستارت ستيت
-        System.out.println("Solved = " + solved);
-        System.out.println("Time = " + (end - start) / 1_000_000.0 + " ms\n");
-    }
+    /*
+     * public static void TestForwardChecking(int n) {
+     * int board[] = generateRandomStartState(n);
+     * System.out.println("========== Forward Checking ==========");
+     * 
+     * long start = System.nanoTime();
+     * boolean solved = ForwardChecking(board);
+     * long end = System.nanoTime();
+     * System.out.println("Start State = " + Arrays.toString(board));
+     * System.out.println("Solved = " + solved);
+     * System.out.println("Time = " + (end - start) / 1_000_000.0 + " ms\n");
+     * }
+     * 
+     * public static void TestMAC(int n) {
+     * int board[] = generateRandomStartState(n);
+     * System.out.println("========== MAC Checking ==========");
+     * 
+     * long start = System.nanoTime();
+     * // boolean solved = MAC(board);
+     * long end = System.nanoTime();
+     * 
+     * System.out.println("Start State = " + Arrays.toString(board)); // هنا نطبع
+     * شكل الستارت ستيت
+     * System.out.println("Solved = " + solved);
+     * System.out.println("Time = " + (end - start) / 1_000_000.0 + " ms\n");
+     * }
+     */
 
     public static int[] generateRandomStartState(int n) {
         int[] board = new int[n];
@@ -59,5 +83,55 @@ public class NQueensTest {
         for (int i = 0; i < n; i++)
             board[i] = rand.nextInt(n);
         return board;
+    }
+
+    // BT
+    static long constraintChecks = 0;
+
+    public static boolean Backtracking(int[] board) {
+        constraintChecks = 0;
+        boolean result = backtrackHelper(board, 0);
+        System.out.println("ConstraintCheckCounter = " + constraintChecks);
+        return result;
+    }
+
+    private static boolean backtrackHelper(int[] board, int col) {
+        int n = board.length;
+        if (Thread.currentThread().isInterrupted()) {
+            return false;
+        }
+
+        if (col == n)
+            return true;
+
+        for (int row = 0; row < n; row++) {
+
+            if (isSafeInside(board, col, row)) {
+                board[col] = row;
+
+                if (backtrackHelper(board, col + 1))
+                    return true;
+
+                board[col] = -1;
+            }
+        }
+
+        return false;
+    }
+
+    private static boolean isSafeInside(int[] board, int col, int row) {
+        for (int c = 0; c < col; c++) {
+            if (board[c] == -1)
+                continue;
+
+            constraintChecks++;
+            if (board[c] == row)
+                return false;
+
+            constraintChecks++;
+            if (Math.abs(board[c] - row) == Math.abs(c - col))
+                return false;
+        }
+        return true;
     }
 }
