@@ -17,15 +17,7 @@ public class NQueensTest {
             System.out.println("========== Testing N = " + n + " ==========");
             TestBacktracking(n);
             // TestForwardChecking(n);
-            // TestMAC(n);
-             int[] boardMAC = generateRandomStartState(n);
-             int[] startStateCopy = Arrays.copyOf(boardMAC, boardMAC.length);
-            
-             System.out.println("========== MAC ==========");
-             boolean solvedMAC = MAC.solve(boardMAC);
-             System.out.println("Start State = " + Arrays.toString(startStateCopy));
-             System.out.println("Solved = " + solvedMAC);
-
+             TestMAC(n);
         }
     }
 
@@ -69,21 +61,21 @@ public class NQueensTest {
      * System.out.println("Solved = " + solved);
      * System.out.println("Time = " + (end - start) / 1_000_000.0 + " ms\n");
      * }
-     * 
-     * public static void TestMAC(int n) {
-     * int board[] = generateRandomStartState(n);
-     * System.out.println("========== MAC Checking ==========");
-     * 
-     * long start = System.nanoTime();
-     * // boolean solved = MAC(board);
-     * long end = System.nanoTime();
-     * 
-     * System.out.println("Start State = " + Arrays.toString(board)); // هنا نطبع
-     * شكل الستارت ستيت
-     * System.out.println("Solved = " + solved);
-     * System.out.println("Time = " + (end - start) / 1_000_000.0 + " ms\n");
-     * }
      */
+      public static void TestMAC(int n) {
+       int board[] = generateRandomStartState(n);
+    int[] startStateCopy = Arrays.copyOf(board, board.length); 
+
+    System.out.println("========== MAC Checking ==========");
+
+    long start = System.nanoTime();
+    boolean solved = MAC.solve(board);
+    long end = System.nanoTime();
+
+    System.out.println("Start State = " + Arrays.toString(startStateCopy)); 
+    System.out.println("Solved = " + solved);
+    System.out.println("Time = " + (end - start) / 1_000_000.0 + " ms\n");
+      }
 
     public static int[] generateRandomStartState(int n) {
         int[] board = new int[n];
