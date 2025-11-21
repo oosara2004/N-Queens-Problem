@@ -18,6 +18,14 @@ public class NQueensTest {
             TestBacktracking(n);
             // TestForwardChecking(n);
             // TestMAC(n);
+             int[] boardMAC = generateRandomStartState(n);
+             int[] startStateCopy = Arrays.copyOf(boardMAC, boardMAC.length);
+            
+             System.out.println("========== MAC ==========");
+             boolean solvedMAC = MAC.solve(boardMAC);
+             System.out.println("Start State = " + Arrays.toString(startStateCopy));
+             System.out.println("Solved = " + solvedMAC);
+
         }
     }
 
