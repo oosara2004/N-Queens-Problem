@@ -1,4 +1,4 @@
-package UniProject;
+
 import java.util.*;
 
 public class MAC {
@@ -89,3 +89,4 @@ public class MAC {
         return copy;
     }
 }
+
